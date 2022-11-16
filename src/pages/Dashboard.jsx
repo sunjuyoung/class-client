@@ -1,14 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
-
-import Sidebar from '../partials/Sidebar';
-import Header from '../partials/Header';
 import WelcomeBanner from '../partials/dashboard/WelcomeBanner';
 import DashboardAvatars from '../partials/dashboard/DashboardAvatars';
 import FilterButton from '../partials/actions/FilterButton';
 import Datepicker from '../partials/actions/Datepicker';
 import DashboardCard01 from '../partials/dashboard/DashboardCard01';
-
-
 import DashboardCard12 from '../partials/dashboard/DashboardCard12';
 import DashboardCard13 from '../partials/dashboard/DashboardCard13';
 import Banner from '../partials/Banner';
@@ -51,16 +46,8 @@ function Dashboard() {
       des:"JAVA, "
     }
   ])
-
-  useEffect(() => {
-
-  }, [auth])
-  
-
   return (
     <div className="flex h-screen overflow-hidden">
-
-
       {/* Content area */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
 
@@ -97,17 +84,12 @@ function Dashboard() {
             </div>
 
             {/* Cards */}
-            <div className="grid grid-cols-12 gap-6">
-
-              
-              {data.map((value,idx)=>(
-                <>
-                <DashboardCard01 key={idx} data={value}/>
-                </>
+            <div className="grid grid-cols-12 gap-6">             
+              {data.map((value)=>(
+            
+                <DashboardCard01 key={value.id} data={value}/>
+             
               ))}
-                  
-
-           
 
               {/* Card (Recent Activity) */}
               <DashboardCard12 />

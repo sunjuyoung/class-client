@@ -5,8 +5,8 @@ import EditMenu from '../EditMenu';
 function DashboardCard01({data}) {
 
   return (
-    <div className="flex flex-col h-60 col-span-full sm:col-span-6 xl:col-span-4 bg-white shadow-lg rounded-sm border border-slate-200">
-      <div className="px-5 pt-5">
+    <div className="flex flex-col h-60 col-span-full sm:col-span-6 xl:col-span-4 bg-white shadow-lg rounded-lg border border-slate-200">
+      <div className="px-5 pt-5 rounded">
         <header className="flex justify-between items-start mb-2">
           <p className=' font-bold  text-2xl text-teal-800 '>{data.title}</p>
           <EditMenu className="relative inline-flex">

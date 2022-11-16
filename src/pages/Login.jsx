@@ -1,14 +1,11 @@
 import React,{useState,useEffect,useRef, useContext} from 'react'
 import { Link,useNavigate } from 'react-router-dom'
 import axios from '../api/axios';
-import AuthContext from '../context/AuthProvider'
+import AuthContext from '../context/AuthProvider';
 
 const Login = () => {
 
-  const userRef = useRef();
-  const {setAuth} = useContext(AuthContext);
-
-
+    const {setAuth} = useContext(AuthContext);
     const [inputs, setInputs] = useState({
         nickname:"",
         password:""
@@ -16,11 +13,6 @@ const Login = () => {
       const [errMsg, setErrMsg] = useState(null)
       const navigate = useNavigate()
 
-      useEffect(() => {
-        //useRef.current.focus();
-      
-     
-      }, [])
       useEffect(()=>{
         setErrMsg('');
       },[inputs])
@@ -37,11 +29,17 @@ const Login = () => {
           console.log(JSON.stringify(res?.data));
           const accessToken = res?.data?.accessToken;
           const roles = res?.data?.roles;
-          const usr = res?.data?.nickname;
+          const user = res?.data?.nickname;
 
-          setAuth({accessToken,roles,usr});
+          setAuth(
+            {
+            accessToken:accessToken,
+            roles:roles,
+            user:user
+            }
+            );
           localStorage.setItem("ACCESS_TOKEN",accessToken);
-          localStorage.setItem("nickname",usr);
+          localStorage.setItem("user",user);
           navigate("/")
         } catch (e) {
           if(!e?.response){

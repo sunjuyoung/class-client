@@ -1,12 +1,13 @@
 import React, { useState, useRef, useEffect,useContext } from 'react';
 import { Link } from 'react-router-dom';
 import Transition from '../../utils/Transition';
-
-import UserAvatar from '../../images/user-avatar-32.png';
 import AuthContext from '../../context/AuthProvider';
 import axios from '../../api/axios';
+import avatar1 from '../../images/user-36-03.jpg';
 
 function UserMenu() {
+
+  
 
   const {auth} = useContext(AuthContext);
   
@@ -40,12 +41,9 @@ function UserMenu() {
     e.preventDefault();
     try{
       const res = await axios.get("/logout")
-
     }catch (e){
-
     }
-   
-    
+
   }
 
   return (
@@ -57,9 +55,9 @@ function UserMenu() {
         onClick={() => setDropdownOpen(!dropdownOpen)}
         aria-expanded={dropdownOpen}
       >
-        <img className="w-8 h-8 rounded-full" src={UserAvatar} width="32" height="32" alt="User" />
+        <img className="w-8 h-8 rounded-full" src={avatar1} width="32" height="32" alt="User" />
         <div className="flex items-center truncate">
-          {auth ? ( <span className="truncate ml-2 text-sm font-medium group-hover:text-slate-800">{auth.usr}</span>):
+          {auth ? ( <span className="truncate ml-2 text-sm font-medium group-hover:text-slate-800">{auth.user}</span>):
           ( <span className="truncate ml-2 text-sm font-medium group-hover:text-slate-800">Anoymouse</span>)}
          
           <svg className="w-3 h-3 shrink-0 ml-1 fill-current text-slate-400" viewBox="0 0 12 12">
@@ -85,7 +83,7 @@ function UserMenu() {
         >
           <div className="pt-0.5 pb-2 px-3 mb-1 border-b border-slate-200">
             <div className="font-medium text-slate-800">
-                {auth ? (<span>{auth.usr}</span>) : (<span>anonymouse</span>)}
+                {auth ? (<span>{auth.user}</span>) : (<span>anonymouse</span>)}
               </div>
             {/* <div className="text-xs text-slate-500 italic">Administrator</div> */}
           </div>

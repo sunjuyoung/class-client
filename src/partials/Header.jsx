@@ -15,13 +15,6 @@ function Header({
   console.log(auth)
   const [searchModalOpen, setSearchModalOpen] = useState(false)
 
- 
-  useEffect(() => {
-    
-  
- 
-  }, [auth])
-  
   
   return (
     <header className="sticky top-0 bg-white border-b border-slate-200 z-30">
@@ -30,22 +23,8 @@ function Header({
 
           {/* Header: Left side */}
           <div className="flex">
-
-            {/* Hamburger button */}
-            {/* <button
-              className="text-slate-500 hover:text-slate-600 lg:hidden"
-              aria-controls="sidebar"
-              aria-expanded={sidebarOpen}
-              onClick={(e) => { e.stopPropagation(); setSidebarOpen(!sidebarOpen); }}
-            >
-              <span className="sr-only">Open sidebar</span>
-              <svg className="w-6 h-6 fill-current" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <rect x="4" y="5" width="16" height="2" />
-                <rect x="4" y="11" width="16" height="2" />
-                <rect x="4" y="17" width="16" height="2" />
-              </svg>
-            </button> */}
-
+            <p className=' text-gray-700 font-adel font-serif text-2xl'>
+              <Link to="/">Study Class</Link></p>
           </div>
 
           {/* Header: Right side */}
