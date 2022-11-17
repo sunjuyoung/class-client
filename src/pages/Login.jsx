@@ -5,53 +5,54 @@ import AuthContext from '../context/AuthProvider';
 
 const Login = () => {
 
-    const {setAuth} = useContext(AuthContext);
+    const {auth,setAuth} = useContext(AuthContext);
     const [inputs, setInputs] = useState({
         nickname:"",
         password:""
       })
-      const [errMsg, setErrMsg] = useState(null)
-      const navigate = useNavigate()
+    const [errMsg, setErrMsg] = useState(null)
+    const navigate = useNavigate()
 
       useEffect(()=>{
         setErrMsg('');
       },[inputs])
       
     
-      const handleChange = (e) =>{
-          setInputs(prev=>({...prev,[e.target.name]: e.target.value}))
-      } 
+    const handleChange = (e) =>{
+        setInputs(prev=>({...prev,[e.target.name]: e.target.value}))
+    } 
     
-      const handleSubmit = async (e) =>{
-        e.preventDefault()
-        try {
-          const res = await axios.post("/login",inputs);
-          console.log(JSON.stringify(res?.data));
-          const accessToken = res?.data?.accessToken;
-          const roles = res?.data?.roles;
-          const user = res?.data?.nickname;
+    const handleSubmit = async (e) =>{
+      e.preventDefault()
+      try {
+        const res = await axios.post("/login",inputs);
+        console.log(JSON.stringify(res?.data));
+        const accessToken = res?.data?.accessToken;
+        const roles = res?.data?.roles;
+        const user = res?.data?.nickname;
 
-          setAuth(
-            {
-            accessToken:accessToken,
-            roles:roles,
-            user:user
-            }
-            );
-          localStorage.setItem("ACCESS_TOKEN",accessToken);
-          localStorage.setItem("user",user);
-          navigate("/")
-        } catch (e) {
-          if(!e?.response){
-            setErrMsg('No server response')
-          } else if(e.response.status === 401){
-            setErrMsg('Login Failed ');
+        setAuth(
+          {
+          accessToken:accessToken,
+          roles:roles,
+          user:user
           }
-          console.log(e)
-          //setErr(e.response.data)
+          );
+        localStorage.setItem("ACCESS_TOKEN",accessToken);
+        localStorage.setItem("user",user);
+
+        navigate("/")
+      } catch (e) {
+        if(!e?.response){
+          setErrMsg('No server response')
+        } else if(e.response.status === 401){
+          setErrMsg('Login Failed ');
         }
-        
+        console.log(e)
+        //setErr(e.response.data)
       }
+      
+    }
 
   return (
     <div className="w-full h-screen overflow-hidden py-20">
@@ -67,6 +68,10 @@ const Login = () => {
           <input className='rounded'
           type="password" placeholder='password' name='password' 
           onChange={handleChange} required/>
+
+
+
+
 
           <button className=' bg-gradient-to-r from-cyan-600 to-teal-500 text-white 
           rounded-md hover:from-cyan-500 hover:to-teal-400'

@@ -13,12 +13,16 @@ import Header from './partials/Header';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/settings/Profile';
+import Password from './pages/settings/Password';
+import Notification from './pages/settings/Notification';
+import Tag from './pages/settings/Tag';
+import Zone from './pages/settings/Zone';
 import  AuthContext  from "./context/AuthProvider";
 
 function App() {
 
   const {auth} = useContext(AuthContext);
-  console.log(auth.user);
+  console.log(auth);
   const LayOut = () =>{
     return(
       <>
@@ -28,18 +32,15 @@ function App() {
     )
   }
 
-  useEffect(()=>{
-
-  },[auth]);
   const ProtectedRoute = ({ children }) => {
-    if (auth.user == null){
+    if (!auth){
       return <Navigate to="/login" />;
     }
     return children;
   };
 
   const ProtectedSignUp = ({ children }) => {
-    if (auth.user != null){
+    if (!auth){
       return <Navigate to="/" />;
     }
     return children;
@@ -59,7 +60,27 @@ function App() {
           element: <Dashboard />
         },
         {
-          path:"/settings",
+          path:"/settings/profile",
+          element: <Profile />
+        },
+        {
+          path:"/settings/password",
+          element: <Password />
+        },
+        {
+          path:"/settings/notification",
+          element: <Notification />
+        },
+        {
+          path:"/settings/zone",
+          element: <Zone />
+        },
+        {
+          path:"/settings/tag",
+          element: <Tag />
+        },
+        {
+          path:"/settings/account",
           element: <Profile />
         },
   
