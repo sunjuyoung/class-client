@@ -23,9 +23,6 @@ const Profile = () => {
           const nickname = localStorage.user;
           
           await axios.get("/api/settings/profile/"+nickname,
-          {headers: {
-            Authorization: "Bearer "+localStorage.ACCESS_TOKEN
-          }},{responseType: 'json'},{responseEncoding: 'utf8'}
           ).then((res)=>{
             
             setProfile(prev=>({...prev,...res.data? res.data: ""}))
