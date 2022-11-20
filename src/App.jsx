@@ -20,11 +20,7 @@ import Zone from './pages/settings/Zone';
 import  AuthContext  from "./context/AuthProvider";
 
 function App() {
-
-  
-
   const {auth} = useContext(AuthContext);
-  console.log(auth);
   const LayOut = () =>{
     return(
       <>

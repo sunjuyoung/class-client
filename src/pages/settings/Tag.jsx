@@ -5,17 +5,15 @@ import WelcomeBanner from '../../partials/dashboard/WelcomeBanner';
 import AuthContext from '../../context/AuthProvider';
 import axios from '../../api/axios';
 import { WithContext as ReactTags } from 'react-tag-input';
+import { registerables } from 'chart.js';
 
 
 const suggestions = [
-  {id:"test", text:"test"},
-  {id:"test", text:"test"},
-  {id:"test", text:"test"},
-  {id:"test", text:"test"},
-  {id:"test", text:"test"},
-  
+  {id:"Java", text:"Java"},
+  {id:"Python", text:"Python"},
+  {id:"javascript", text:"javascript"},
+  {id:"Spring", text:"Spring"},
 ]
-
 
 const KeyCodes = {
   comma: 188,
@@ -29,13 +27,8 @@ const Tag = () => {
     const {auth} = useContext(AuthContext);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [errorMsg, setErrorMsg] = useState();
-    const [reqData, setReqData] = useState({
-      title:""
-    });
-    const [tags, setTags] = useState([
-      { id: 'Vietnam', text: 'Vietnam' },
-      { id: 'Turkey', title: 'Turkey' },
-    ]);
+    const [reqData, setReqData] = useState({});
+    const [tags, setTags] = useState([]);
 
     const handleDrag = (tag, currPos, newPos) => {
       const newTags = tags.slice();
@@ -50,41 +43,26 @@ const Tag = () => {
     const handleTagClick = (index) => {
       console.log('The tag at index ' + index + ' was clicked');
     };
-    
-
-    
+  
 
       useEffect(() => {
         const fetchData = async () =>{
-            try {
-                const res = await axios.get("/api/settings/tag/"+auth.user)
-                  console.log(res.data);
-            } catch (error) {
-                
-            }
+          try {
+              const res = await axios.get("/api/settings/tag/"+auth.user)
+                const tagList = res.data;
+                setTags(tagList.map(text=>{
+                    return {id:text,text:text}
+                }))           
+          } catch (error) {
+          }
+      }
+        return () => {
+          fetchData();
 
         }
-       // fetchData();
       }, [])
+      
 
-    // SAVE 
-    const handleSubmit = async (e) =>{
-      e.preventDefault();
-
-
-      const nickname = auth.user;
-      try {
-        const res = await axios.post("/api/settings/tag/"+nickname, tagTitle, {headers: {
-          Authorization: "Bearer "+localStorage.ACCESS_TOKEN
-        }})
-        alert("save success");
-        setErrorMsg("")
-        
-      } catch (error) {
-        console.log(error);
-      }
-     
-    }
     //setBook(prev=> ({...prev,[e.target.name] : e.target.value}));
     const handleChange = (e) =>{
     //   const {value , name} = e.target;
@@ -92,15 +70,21 @@ const Tag = () => {
 
   } 
 
-  const handleDelete = (i) => {
-    setTags(tags.filter((tag, index) => index !== i));
+  const handleDelete = async (i) => {
+    try {
+        const nickname = auth.user;
+        const res = await axios.delete("/api/settings/tag/" + nickname+"/"+tags[i].text)
+        alert("delete success");
+      setErrorMsg(null);
+      setTags(tags.filter((tag, index) => index !== i));
+    } catch (error) {
+      console.log(error);
+    }
+    
   };
 
   const handleAddition =  async (tag) => {  
-    setReqData(()=> ({title:tag.text}));
-    setReqData((state)=>(console.log(state)))
     setTags([...tags, tag]);
-    //addTag();
     const nickname = auth.user;
     try {
       const res = await axios.post("/api/settings/tag/" + nickname, {title:tag.text})
@@ -113,23 +97,7 @@ const Tag = () => {
 
   };
 
-
-  const addTag = async () =>{
-    const nickname = auth.user;
-    console.log(tags);
-    try {
-      const res = await axios.post("/api/settings/tag/" + nickname, reqData)
-      alert("save success");
-      setErrorMsg(null);
-
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-
-
-
+ 
   return (
     <div className="flex h-screen overflow-hidden w-full">
       {/* Sidebar */}

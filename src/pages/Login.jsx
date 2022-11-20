@@ -70,9 +70,6 @@ const Login = () => {
           onChange={handleChange} required/>
 
 
-
-
-
           <button className=' bg-gradient-to-r from-cyan-600 to-teal-500 text-white 
           rounded-md hover:from-cyan-500 hover:to-teal-400'
           onClick={handleSubmit}>Login</button>

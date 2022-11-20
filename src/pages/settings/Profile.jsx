@@ -24,7 +24,6 @@ const Profile = () => {
           
           await axios.get("/api/settings/profile/"+nickname,
           ).then((res)=>{
-            
             setProfile(prev=>({...prev,...res.data? res.data: ""}))
           })
   
