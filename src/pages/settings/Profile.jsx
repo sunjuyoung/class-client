@@ -135,7 +135,7 @@ const Profile = () => {
                       </div>
 
 
-                      <div className="col-span-6 sm:col-span-3">
+                      {/* <div className="col-span-6 sm:col-span-3">
                         <label htmlFor="country" className="block text-sm font-medium text-gray-700">
                           지역
                         </label>
@@ -150,7 +150,7 @@ const Profile = () => {
                           <option>Canada</option>
                           <option>Mexico</option>
                         </select>
-                      </div>
+                      </div> */}
 
                   <div className=" rounded-md border border-gray-300 bg-white py-2 px-5 mt-4 text-sm font-medium
                    leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2

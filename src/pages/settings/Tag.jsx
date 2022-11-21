@@ -3,6 +3,7 @@ import Sidebar from '../../partials/Sidebar';
 import Header from '../../partials/Header';
 import WelcomeBanner from '../../partials/dashboard/WelcomeBanner';
 import AuthContext from '../../context/AuthProvider';
+import TagContext from '../../context/TagProvider';
 import axios from '../../api/axios';
 import { WithContext as ReactTags } from 'react-tag-input';
 import { registerables } from 'chart.js';
@@ -25,6 +26,7 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
 const Tag = () => {
     const {auth} = useContext(AuthContext);
+    const {topTag,setTopTag} = useContext(TagContext);
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [errorMsg, setErrorMsg] = useState();
     const [reqData, setReqData] = useState({});
@@ -50,9 +52,11 @@ const Tag = () => {
           try {
               const res = await axios.get("/api/settings/tag/"+auth.user)
                 const tagList = res.data;
+                setTopTag(tagList);
                 setTags(tagList.map(text=>{
                     return {id:text,text:text}
                 }))           
+                
           } catch (error) {
           }
       }
@@ -97,13 +101,17 @@ const Tag = () => {
 
   };
 
+
+  
+
+
  
   return (
     <div className="flex h-screen overflow-hidden w-full">
       {/* Sidebar */}
       <Sidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />  
           {/* Content area */}
-        <div className=" flex flex-col  overflow-y-auto  w-full">
+        <div className=" flex flex-col    overflow-y-auto  w-full">
           {/*  Site header */}
           { /* <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} /> */}
           <main>

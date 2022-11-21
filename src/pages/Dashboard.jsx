@@ -8,11 +8,16 @@ import DashboardCard12 from '../partials/dashboard/DashboardCard12';
 import DashboardCard13 from '../partials/dashboard/DashboardCard13';
 import Banner from '../partials/Banner';
 import AuthContext from '../context/AuthProvider'
+import TagContext from '../context/TagProvider'
 import { useNavigate } from 'react-router-dom';
+import axios from '../api/axios';
+
+
 function Dashboard() {
 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const {auth} = useContext(AuthContext);
+  const {setTopTag} = useContext(TagContext);
   const navigate =  useNavigate();
   const [data, setData] = useState([
     {
@@ -46,6 +51,21 @@ function Dashboard() {
       des:"JAVA, "
     }
   ])
+
+
+  useEffect(() => {
+    const fetchData = async () =>{
+      try {
+          const res = await axios.get("/api/settings/tag/"+auth.user)
+            const tagList = res.data;
+            setTopTag(tagList);
+      } catch (error) {
+        console.log(error);
+      }
+  }
+      fetchData();
+  }, []);
+
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Content area */}

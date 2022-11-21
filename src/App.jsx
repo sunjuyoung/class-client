@@ -18,6 +18,8 @@ import Notification from './pages/settings/Notification';
 import Tag from './pages/settings/Tag';
 import Zone from './pages/settings/Zone';
 import  AuthContext  from "./context/AuthProvider";
+import Create from './pages/study/create';
+import View from './pages/study/View';
 
 function App() {
   const {auth} = useContext(AuthContext);
@@ -31,9 +33,9 @@ function App() {
   }
 
   const ProtectedRoute = ({ children }) => {
-    if (!auth){
-      return <Navigate to="/login" />;
-    }
+    // if (!auth){
+    //   return <Navigate to="/login" />;
+    // }
     return children;
   };
 
@@ -80,6 +82,14 @@ function App() {
         {
           path:"/settings/account",
           element: <Profile />
+        },
+        {
+          path:"/study-create",
+          element: <Create />
+        },
+        {
+          path:"/study/:path",
+          element: <View />
         },
   
       ]

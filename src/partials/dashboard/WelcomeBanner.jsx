@@ -1,8 +1,19 @@
-import React, { useContext } from 'react';
+import React, { useContext,useEffect } from 'react';
 import AuthContext from '../../context/AuthProvider';
+import TagContext from '../../context/TagProvider';
 
 function WelcomeBanner() {
   const {auth} = useContext(AuthContext);
+  const {topTag} = useContext(TagContext);
+  
+
+  useEffect(() => {
+    
+  
+
+  }, [topTag])
+  
+
   return (
     <div className="relative bg-indigo-200 p-4 sm:p-6 rounded-sm overflow-hidden mb-8">
 
@@ -50,8 +61,8 @@ function WelcomeBanner() {
 
       {/* Content */}
       <div className="relative">
-        <h1 className="text-2xl md:text-3xl text-slate-800 font-bold mb-1"> {auth.usr} 👋</h1>
-        <p>나의 관심 주제 :</p>
+        <h1 className="text-2xl md:text-3xl text-slate-800 font-bold mb-1"> {auth?.user} 👋</h1>
+        <p>나의 관심 주제 :{topTag}</p>
       </div>
 
     </div>
