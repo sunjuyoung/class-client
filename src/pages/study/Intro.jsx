@@ -1,10 +1,11 @@
 import React from 'react'
 
-const Intro = () => {
+const Intro = ({studyData}) => {
+  const test = studyData;
+
   return (
     <div>
-        스터디 개설 테스트 
-        소개란
+      <p>{test.title}</p>
     </div>
   )
 }

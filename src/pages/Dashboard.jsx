@@ -9,7 +9,7 @@ import DashboardCard13 from '../partials/dashboard/DashboardCard13';
 import Banner from '../partials/Banner';
 import AuthContext from '../context/AuthProvider'
 import TagContext from '../context/TagProvider'
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from '../api/axios';
 
 
@@ -23,32 +23,38 @@ function Dashboard() {
     {
       id:1,
       title:"개발하자.",
-      des:"spring, sql, "
+      des:"spring, sql, ",
+      path: "test"
     },
     {
       id:2,
       title:"서울 스터디",
-      des:"서울 자바 스터디 모집해요"
+      des:"서울 자바 스터디 모집해요",
+      path: "test"
     },
     {
       id:3,
       title:"경기 스터디.",
-      des:"spring 웹 개발 하실분"
+      des:"spring 웹 개발 하실분",
+      path: "test"
     },
     {
       id:4,
       title:"빡세게.",
-      des:"데이터 베이스 스터디 ㄱ"
+      des:"데이터 베이스 스터디 ㄱ",
+      path: "test"
     },
     {
       id:5,
       title:"주말 스터디.",
-      des:"주말에 리액트 개발 "
+      des:"주말에 리액트 개발 ",
+      path: "test"
     },
     {
       id:6,
       title:"자바 스터디.",
-      des:"JAVA, "
+      des:"JAVA, ",
+      path: "test"
     }
   ])
 
@@ -56,9 +62,13 @@ function Dashboard() {
   useEffect(() => {
     const fetchData = async () =>{
       try {
-          const res = await axios.get("/api/settings/tag/"+auth.user)
+        const nickname = auth.user;
+          const res = await axios.get("/api/settings/tag/"+nickname)
             const tagList = res.data;
-            setTopTag(tagList);
+            if(tagList.length !== null){
+              setTopTag(tagList);
+            }
+            
       } catch (error) {
         console.log(error);
       }
@@ -104,10 +114,12 @@ function Dashboard() {
             </div>
 
             {/* Cards */}
-            <div className="grid grid-cols-12 gap-6">             
+            <div className="flex h-60 col-span-full sm:col-span-4 xl:col-span-4 bg-white shadow-lg rounded-lg border border-slate-200">             
               {data.map((value)=>(
-            
+                <Link to={`/study/${value.path}`} state={{path:value.path}} key={value.id} 
+                className="" >
                 <DashboardCard01 key={value.id} data={value}/>
+                </Link>
              
               ))}
 

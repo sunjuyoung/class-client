@@ -65,14 +65,6 @@ const Tag = () => {
 
         }
       }, [])
-      
-
-    //setBook(prev=> ({...prev,[e.target.name] : e.target.value}));
-    const handleChange = (e) =>{
-    //   const {value , name} = e.target;
-    //   setPassword(prev=>({...prev,[name]: value}));
-
-  } 
 
   const handleDelete = async (i) => {
     try {
@@ -102,10 +94,6 @@ const Tag = () => {
   };
 
 
-  
-
-
- 
   return (
     <div className="flex h-screen overflow-hidden w-full">
       {/* Sidebar */}
@@ -125,29 +113,21 @@ const Tag = () => {
                   <h1 className=' font-mono font-bold mb-4 text-2xl'>관심 주제</h1>
                 
                 <div className='w-full'>
-                <ReactTags
-                  tags={tags}
-                  suggestions={suggestions}
-                  delimiters={delimiters}
-                  handleDelete={handleDelete}
-                  handleAddition={(tag,e)=>handleAddition(tag,e)}
-                  handleDrag={handleDrag}
-                  handleTagClick={handleTagClick}
-                  inputFieldPosition="top"
-                  //autocomplete
-                 // editable
-                 />
+                  <ReactTags
+                    tags={tags}
+                    suggestions={suggestions}
+                    delimiters={delimiters}
+                    handleDelete={handleDelete}
+                    handleAddition={(tag,e)=>handleAddition(tag,e)}
+                    handleDrag={handleDrag}
+                    handleTagClick={handleTagClick}
+                    inputFieldPosition="top"
+                    //autocomplete
+                  // editable
+                  />
                 </div>
-
-                {/* <div className=" rounded-md border border-gray-300 bg-white py-2 px-5 mt-4 text-sm font-medium
-                    leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2
-                      focus:ring-indigo-500 focus:ring-offset-2 w-20">
-                    <button  type="button" onClick={handleSubmit}>Save</button>
-                </div> */}
-                       
-                </div>
-
-                </form>
+              </div>
+              </form>
 
               </div>
             </div>

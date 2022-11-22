@@ -8,11 +8,30 @@ import Intro from './Intro';
 import Members from './Members';
 import Setting from './Setting';
 import Event from './Event';
+import { useLocation, useParams } from 'react-router-dom';
 
-const Create = () => {
+const View = () => {
    
   const {auth} = useContext(AuthContext);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [studyData, setStudyData] = useState();
+  const [loading, setLoading] = useState(true);
+ // const location = useLocation();
+  const param = useParams();
+
+  useEffect(() => {
+    const fetchData = async () =>{
+      try {
+           const res = await axios.get("/api/study/"+param.path)
+           setStudyData(res.data);
+          
+      } catch (error) {
+        console.log(error)
+      }
+  }
+  fetchData();
+  }, [])
+ 
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -35,8 +54,8 @@ const Create = () => {
               <form>
               <div className="flex flex-col mb-8 py-2  w-full">
                 <h1 className=' font-mono font-bold mb-4 text-2xl'>스터디 </h1>
-
-                    <Tab.Group>
+                {studyData == null? "loading": (<>
+                  <Tab.Group>
                     <Tab.List className="flex space-x-1 rounded-xl bg-blue-900 p-1 max-w-xl">
                     <Tab
                         className={({ selected }) =>
@@ -86,22 +105,25 @@ const Create = () => {
                         <Tab.Panels>
 
                             <Tab.Panel>
-                                <Intro />
+                                <Intro studyData={studyData}/>
                             </Tab.Panel>
 
                             <Tab.Panel>
-                                <Members />
+                                <Members studyData={studyData}/>
                             </Tab.Panel>
                              
                             <Tab.Panel>
-                             <Event />
+                             <Event studyData={studyData}/>
                             </Tab.Panel>
                                 
                             <Tab.Panel>
-                              <Setting />
+                              <Setting studyData={studyData}/>
                             </Tab.Panel>
                         </Tab.Panels>
                         </Tab.Group>
+                </>)}
+
+    
                
                     
                      
@@ -118,5 +140,5 @@ const Create = () => {
 }
 
 
-export default Create
+export default View
 
