@@ -16,6 +16,7 @@ const View = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [studyData, setStudyData] = useState();
   const [loading, setLoading] = useState(true);
+  const [tagData, setTagData] = useState();
  // const location = useLocation();
   const param = useParams();
 
@@ -24,14 +25,12 @@ const View = () => {
       try {
            const res = await axios.get("/api/study/"+param.path)
            setStudyData(res.data);
-          
       } catch (error) {
         console.log(error)
       }
   }
   fetchData();
   }, [])
- 
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -46,7 +45,7 @@ const View = () => {
         {/*  Site header */}
         { /* <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} /> */}
         <main>
-          <div className=" px-4 sm:px-6 lg:px-8 py-8 w-full">
+          <div className=" px-4 sm:px-6 lg:px-8 py-8 w-full ">
             {/* Welcome banner */}
             <WelcomeBanner />
             {/* Dashboard actions */}

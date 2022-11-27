@@ -62,7 +62,13 @@ function WelcomeBanner() {
       {/* Content */}
       <div className="relative">
         <h1 className="text-2xl md:text-3xl text-slate-800 font-bold mb-1"> {auth?.user} 👋</h1>
-        <p>나의 관심 주제 :{topTag}</p>
+        <p>나의 관심 주제 :</p>
+        <div className="flex gap-6 items-start py-2">
+          <div className="text-sm font-semibold text-white px-1.5 bg-green-500 rounded-full">JAVA</div>
+          <div className="text-sm font-semibold text-white px-1.5 bg-teal-500 rounded-full">Spring</div>
+          <div className="text-sm font-semibold text-white px-1.5 bg-blue-500 rounded-full">JPA</div>
+          <div className="text-sm font-semibold text-white px-1.5 bg-green-500 rounded-full">MySql</div>
+        </div>
       </div>
 
     </div>

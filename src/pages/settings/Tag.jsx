@@ -53,17 +53,15 @@ const Tag = () => {
               const res = await axios.get("/api/settings/tag/"+auth.user)
                 const tagList = res.data;
                 setTopTag(tagList);
+                if(tagList.length !== 0){
                 setTags(tagList.map(text=>{
                     return {id:text,text:text}
                 }))           
-                
+              }
           } catch (error) {
           }
       }
-        return () => {
           fetchData();
-
-        }
       }, [])
 
   const handleDelete = async (i) => {

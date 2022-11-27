@@ -22,7 +22,7 @@ import Create from './pages/study/create';
 import View from './pages/study/View';
 
 function App() {
-  const {auth} = useContext(AuthContext);
+  //const {auth} = useContext(AuthContext);
   const LayOut = () =>{
     return(
       <>
@@ -32,27 +32,22 @@ function App() {
     )
   }
 
-  const ProtectedRoute = ({ children }) => {
-    // if (!auth){
-    //   return <Navigate to="/login" />;
-    // }
-    return children;
-  };
+  // const ProtectedRoute = ({ children }) => {
+  //   if (auth.user == null){
+  //     return <Navigate to="/login" />;
+  //   }
+  //   return children;
+  // };
 
-  const ProtectedSignUp = ({ children }) => {
-    if (!auth){
-      return <Navigate to="/" />;
-    }
-    return children;
-  };
+
   
   const router = createBrowserRouter([
     {
       path: "/",
       element: (
-        <ProtectedRoute>
+       // <ProtectedRoute>
           <LayOut />
-        </ProtectedRoute>
+     //   </ProtectedRoute>
         ),
       children: [
         {

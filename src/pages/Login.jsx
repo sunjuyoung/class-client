@@ -13,9 +13,7 @@ const Login = () => {
     const [errMsg, setErrMsg] = useState(null)
     const navigate = useNavigate()
 
-      useEffect(()=>{
-        setErrMsg('');
-      },[inputs])
+
       
     
     const handleChange = (e) =>{
@@ -33,13 +31,13 @@ const Login = () => {
 
         setAuth(
           {
-          accessToken:accessToken,
-          roles:roles,
-          user:user
+          role:roles,
+          user:user,
+          accessToken: accessToken
           }
           );
-        localStorage.setItem("ACCESS_TOKEN",accessToken);
-        localStorage.setItem("user",user);
+        // localStorage.setItem("ACCESS_TOKEN",accessToken);
+        // localStorage.setItem("user",user);
 
         navigate("/")
       } catch (e) {

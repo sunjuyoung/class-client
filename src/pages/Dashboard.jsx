@@ -14,50 +14,11 @@ import axios from '../api/axios';
 
 
 function Dashboard() {
-
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const {auth} = useContext(AuthContext);
   const {setTopTag} = useContext(TagContext);
   const navigate =  useNavigate();
   const [data, setData] = useState([
-    {
-      id:1,
-      title:"개발하자.",
-      des:"spring, sql, ",
-      path: "test"
-    },
-    {
-      id:2,
-      title:"서울 스터디",
-      des:"서울 자바 스터디 모집해요",
-      path: "test"
-    },
-    {
-      id:3,
-      title:"경기 스터디.",
-      des:"spring 웹 개발 하실분",
-      path: "test"
-    },
-    {
-      id:4,
-      title:"빡세게.",
-      des:"데이터 베이스 스터디 ㄱ",
-      path: "test"
-    },
-    {
-      id:5,
-      title:"주말 스터디.",
-      des:"주말에 리액트 개발 ",
-      path: "test"
-    },
-    {
-      id:6,
-      title:"자바 스터디.",
-      des:"JAVA, ",
-      path: "test"
-    }
-  ])
-
+  ]);
 
   useEffect(() => {
     const fetchData = async () =>{
@@ -65,10 +26,9 @@ function Dashboard() {
         const nickname = auth.user;
           const res = await axios.get("/api/settings/tag/"+nickname)
             const tagList = res.data;
-            if(tagList.length !== null){
+            if(res.data != ''){
               setTopTag(tagList);
             }
-            
       } catch (error) {
         console.log(error);
       }
@@ -76,14 +36,25 @@ function Dashboard() {
       fetchData();
   }, []);
 
+  useEffect(() => {
+    const fetchData = async() =>{
+      try {
+        const res = await axios.get("/api/study")
+        console.log(res.data);
+        setData(()=>res.data)
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, [])
+
   return (
     <div className="flex h-screen overflow-hidden">
       {/* Content area */}
       <div className="relative flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-
         {/*  Site header */}
         {/* <Header sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} /> */}
-
         <main>
           <div className="px-4 sm:px-6 lg:px-8 py-8 w-full max-w-9xl mx-auto">
 
@@ -114,15 +85,16 @@ function Dashboard() {
             </div>
 
             {/* Cards */}
-            <div className="flex h-60 col-span-full sm:col-span-4 xl:col-span-4 bg-white shadow-lg rounded-lg border border-slate-200">             
-              {data.map((value)=>(
-                <Link to={`/study/${value.path}`} state={{path:value.path}} key={value.id} 
-                className="" >
-                <DashboardCard01 key={value.id} data={value}/>
-                </Link>
-             
+       
+            <div className="flex flex-wrap  sm:col-span-3 xl:col-span-3   gap-4   bg-white shadow-lg rounded-lg border border-slate-200">             
+              {data.map((value,idx)=>(
+                // <Link to={`/study/${value.path}`} state={{path:value.path}} key={value.id} 
+                // className="" >
+                <DashboardCard01 key={idx} data={value}/>
+                //</Link>
               ))}
-
+              </div>
+              <div>
               {/* Card (Recent Activity) */}
               <DashboardCard12 />
               {/* Card (Income/Expenses) */}

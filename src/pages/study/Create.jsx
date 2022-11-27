@@ -28,7 +28,7 @@ const Create = () => {
     try {
       const res = await axios.post("/api/study/"+nickname, newStudy)
       console.log(res.data)
-      navigate(`/study/${res.data}`)
+      navigate(`/study/${newStudy.path}`)
     } catch (error) {
       console.log(error);
     }

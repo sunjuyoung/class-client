@@ -6,10 +6,8 @@ import axios from '../../api/axios';
 import { MultiSelect } from "react-multi-select-component";
 
 const Zone = () => {
-
   let options = [];
   let zoneData = [];
-
   const [selected, setSelected] = useState([]);
   const {auth} = useContext(AuthContext);
   const [sidebarOpen, setSidebarOpen] = useState(false);

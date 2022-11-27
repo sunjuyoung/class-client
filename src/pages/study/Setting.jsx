@@ -23,20 +23,70 @@ const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
 const Setting = ({studyData}) => {
   const {auth} = useContext(AuthContext);
-  const [newStudy,setNewStudy ] = useState({});
+  const [newStudy,setNewStudy ] = useState();
   const [loading, setLoading] = useState(true);
   const [tags, setTags] = useState([]);
   let options = [];
   let zoneData = [];
   const [zones, setZones] = useState([]);
-
   const [selected, setSelected] = useState([]);
 
   useEffect(() => {
-    setNewStudy(studyData);
+    const fetchData = async () =>{
+      try {
+           const res = await axios.get("/api/study/tag/"+studyData.path)
+           const tagList = res.data;
+           setTags(tagList.map(text=>{
+               return {id:text.id,text:text.title}
+           }))    
+      } catch (error) {
+        console.log(error)
+      }
+  }
+  fetchData();
+    
+  }, [])
+
+
+  //console.log(tags)
+  
+  //지역 리스트
+  useEffect(() => {
+    const fetchData = async () =>{
+      try {
+          const res = await axios.get("/api/settings/zone/")
+            const zoneList = res.data;
+            setZones(zoneList.map(text=>{
+                return {label:text,value:text}
+            }))           
+      } catch (error) {
+        console.log(error)
+      }
+  }
+    fetchData();
+  }, []);
+
+
+  useEffect(() => {
+    const fetchData = async () =>{
+      try {
+          const res = await axios.get("/api/study/zone/"+studyData.path)
+            const zoneList = res.data;
+            console.log(zoneList)
+            if(zoneList.length !== 0){
+              setSelected(zoneList.map(text=>{
+                      return {label:text,value:text}
+                  }))    
+            }
+          
+      } catch (error) {
+        console.log(error)
+      }
+  }
+    fetchData();
   }, [])
   
-
+  
   const handleSubmit = async (e) =>{
     e.preventDefault();
     //const nickname = auth.user;
@@ -69,13 +119,13 @@ const handleDelete = async (i) => {
   
 };
 
+//tag add
 const handleAddition =  async (tag) => {  
   setTags([...tags, tag]);
   const nickname = auth.user;
   try {
-    const res = await axios.post("/api/settings/tag/" + nickname, {title:tag.text})
+    const res = await axios.post("/api/study/tag/" + studyData.path, {title:tag.text})
     alert("save success");
-    setErrorMsg(null);
 
   } catch (error) {
     console.log(error);
@@ -103,35 +153,35 @@ const handleZoneSubmit = async (e) =>{
     })
 
   try {
-    const nickname = auth.user;
-    const res = await axios.post("/api/settings/zone/"+nickname, zoneData)
+    const res = await axios.post("/api/study/zone/"+studyData.path, zoneData)
 
 } catch (error) {
   console.log(error)
 }
 }
 options = zones;
+
+
   
   return (
     <Tab.Group>
-    <div className="flex w-full max-w-9xl  col-span-full sm:col-span-12 xl:col-span-12  items-center">
-      <div className=' w-40 max-w-sm px-2'>
-      
-      <Tab.List className="flex flex-col mt-4 gap-4">
+    <div className="flex w-full max-w-9xl h-80 col-span-full sm:col-span-12 xl:col-span-12  items-center">
+      <div className=' w-40 max-w-sm px-2 mr-4'>
+      <Tab.List className="flex flex-col mt-4 gap-4 ">
         <Tab>소개</Tab>
         <Tab>스터디 주제</Tab>
         <Tab>활동 지역</Tab>
+        <Tab>스터디</Tab>
       </Tab.List>
-    
-  
       </div>
+
       <div className=' w-full max-w-xl  pr-10 mr-10'>
       {studyData == null? "loading": (<>
       <Tab.Panels>
         <Tab.Panel>
         <div>
         <form>
-          <div className='py-5'>
+          <div className='py-5 my-5'>
           
               <label htmlFor="about" className="block text-sm font-medium text-gray-700">
                 짧은 소개
@@ -142,7 +192,7 @@ options = zones;
                   name="shortDescription"
                   rows={3} 
                   onChange={handleChange}
-                  value={newStudy.shortDescription}
+                  value={studyData.shortDescription}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   placeholder=""
                   
@@ -160,7 +210,7 @@ options = zones;
                   name="fullDescription"
                   rows={3} 
                   onChange={handleChange}
-                  value={newStudy.fullDescription}
+                  value={studyData.fullDescription}
                   className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                   placeholder=""
                   
@@ -235,6 +285,53 @@ options = zones;
               </form>
 
             </div>
+        </Tab.Panel>
+        <Tab.Panel>
+
+          <div>
+            
+            {!studyData.published? ( 
+            <div>
+              <h1>스터디 공개</h1>
+              <form>
+              <div>
+                <p> 스터디를 다른 사용자에게 공개할 준비가 되었다면 버튼을 클릭하세요.
+                    소개, 배너 이미지, 스터디 주제 및 활동 지역을 등록했는지 확인하세요.
+                    스터디를 공개하면 주요 활동 지역과 스터디 주제에 관심있는 다른 사용자에게 알림을 전송합니다.</p>
+              </div>
+              <div className=" rounded-md border border-gray-300 bg-white py-2 px-5 mt-4 text-sm font-medium
+              leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2
+              focus:ring-indigo-500 focus:ring-offset-2 w-20">
+              <button  type="button" onClick={handleSubmit}>스터디 공개</button>
+             
+            </div>
+              </form>
+            </div>
+            ): (       
+            <div>
+              <h1>스터디 종료</h1>
+              <form>
+              <div>
+                <p>스터디 활동을 마쳤다면 스터디를 종료하세요.
+                   스터디를 종료하면 더이상 팀원을 모집하거나 모임을 만들 수 없으며, 스터디 경로와 이름을 수정할 수 없습니다.
+                   스터디 모임과 참여한 팀원의 기록은 그대로 보관합니다.</p>
+              </div>
+              <div className=" rounded-md border border-gray-300 bg-white py-2 px-5 mt-4 text-sm font-medium
+              leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2
+              focus:ring-indigo-500 focus:ring-offset-2 w-20">
+              <button  type="button" onClick={handleSubmit}>스터디 종료</button>
+             
+            </div>
+              </form>
+            </div>
+            )}
+           
+
+
+     
+
+          </div>
+
         </Tab.Panel>
       </Tab.Panels>
       </>)}

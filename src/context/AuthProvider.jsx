@@ -1,16 +1,24 @@
 import { createContext,useState,useEffect } from "react";
 
-const AuthContext = createContext();
+
+const INITIAL_STATE = {
+    user: localStorage.getItem("user") || null,
+    role: localStorage.getItem("role") || null,
+    accessToken : localStorage.getItem("ACCESS_TOKEN") || null,
+    loading: false,
+    error: null,
+  };
+
+const AuthContext = createContext(INITIAL_STATE);
 
 export const AuthProvider = ({ children }) => {
-    const [auth,setAuth] = useState();
+    const [auth,setAuth] = useState(INITIAL_STATE);
 
     useEffect(() => {
-        setAuth({
-            user:localStorage.getItem("user"),
-            accessToken:localStorage.getItem("ACCESS_TOKEN"),
-        })
-      }, []);
+        localStorage.setItem("user", auth.user);
+        localStorage.setItem("role", auth.role);
+        localStorage.setItem("ACCESS_TOKEN", auth.accessToken);
+      }, [auth.user]);
 
     return(
         <AuthContext.Provider value={{ auth, setAuth}}>
