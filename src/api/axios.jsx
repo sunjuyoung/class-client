@@ -1,8 +1,9 @@
 import axios from "axios";
 
+
 const headers = {
     'Content-Type': 'application/json',
-    'Authorization': "Bearer "+localStorage.ACCESS_TOKEN,
+    'Authorization': "Bearer "+localStorage.getItem("ACCESS_TOKEN"),
   }
 
 export default axios.create({

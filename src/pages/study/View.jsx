@@ -20,17 +20,8 @@ const View = () => {
  // const location = useLocation();
   const param = useParams();
 
-  useEffect(() => {
-    const fetchData = async () =>{
-      try {
-           const res = await axios.get("/api/study/"+param.path)
-           setStudyData(res.data);
-      } catch (error) {
-        console.log(error)
-      }
-  }
-  fetchData();
-  }, [])
+ 
+
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
@@ -53,7 +44,7 @@ const View = () => {
               <form>
               <div className="flex flex-col mb-8 py-2  w-full">
                 <h1 className=' font-mono font-bold mb-4 text-2xl'>스터디 </h1>
-                {studyData == null? "loading": (<>
+                
                   <Tab.Group>
                     <Tab.List className="flex space-x-1 rounded-xl bg-blue-900 p-1 max-w-xl">
                     <Tab
@@ -104,23 +95,23 @@ const View = () => {
                         <Tab.Panels>
 
                             <Tab.Panel>
-                                <Intro studyData={studyData}/>
+                                <Intro />
                             </Tab.Panel>
 
                             <Tab.Panel>
-                                <Members studyData={studyData}/>
+                                <Members />
                             </Tab.Panel>
                              
                             <Tab.Panel>
-                             <Event studyData={studyData}/>
+                             <Event />
                             </Tab.Panel>
                                 
                             <Tab.Panel>
-                              <Setting studyData={studyData}/>
+                              <Setting />
                             </Tab.Panel>
                         </Tab.Panels>
                         </Tab.Group>
-                </>)}
+            
 
     
                

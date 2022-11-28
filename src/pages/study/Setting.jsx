@@ -6,7 +6,7 @@ import axios from '../../api/axios';
 import { Link,useNavigate } from 'react-router-dom'
 import { Tab } from '@headlessui/react'
 import { MultiSelect } from "react-multi-select-component";
-
+import { useLocation, useParams } from 'react-router-dom';
 
 const suggestions = [
   {id:"Java", text:"Java"},
@@ -21,35 +21,18 @@ const KeyCodes = {
 
 const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
-const Setting = ({studyData}) => {
+const Setting = () => {
   const {auth} = useContext(AuthContext);
-  const [newStudy,setNewStudy ] = useState();
+  const [newStudy,setNewStudy ] = useState({});
   const [loading, setLoading] = useState(true);
   const [tags, setTags] = useState([]);
   let options = [];
   let zoneData = [];
   const [zones, setZones] = useState([]);
   const [selected, setSelected] = useState([]);
+  const param = useParams();
+  const [studyData, setStudyData] = useState({});
 
-  useEffect(() => {
-    const fetchData = async () =>{
-      try {
-           const res = await axios.get("/api/study/tag/"+studyData.path)
-           const tagList = res.data;
-           setTags(tagList.map(text=>{
-               return {id:text.id,text:text.title}
-           }))    
-      } catch (error) {
-        console.log(error)
-      }
-  }
-  fetchData();
-    
-  }, [])
-
-
-  //console.log(tags)
-  
   //지역 리스트
   useEffect(() => {
     const fetchData = async () =>{
@@ -66,27 +49,31 @@ const Setting = ({studyData}) => {
     fetchData();
   }, []);
 
-
   useEffect(() => {
     const fetchData = async () =>{
       try {
-          const res = await axios.get("/api/study/zone/"+studyData.path)
-            const zoneList = res.data;
-            console.log(zoneList)
-            if(zoneList.length !== 0){
-              setSelected(zoneList.map(text=>{
-                      return {label:text,value:text}
-                  }))    
-            }
-          
+           const res = await axios.get("/api/study/"+param.path)
+           console.log(res.data)
+    
+           setTags(res.data.tags.map(text=>{
+               return {id:text.id,text:text.title}
+           }))    
+           if(res.data.zones.length !== 0){
+            setSelected(res.data.zones.map((text)=>{
+                    return {label:text.localNameOfCity,value:text.localNameOfCity}
+                }))    
+            
+          }
+          setStudyData(res.data);
       } catch (error) {
         console.log(error)
       }
   }
-    fetchData();
+  fetchData();
+    
   }, [])
-  
-  
+
+ 
   const handleSubmit = async (e) =>{
     e.preventDefault();
     //const nickname = auth.user;
@@ -104,6 +91,39 @@ const Setting = ({studyData}) => {
     setNewStudy(prev=>({...prev,[name]: value}));
 
 } 
+
+//스터디 공개
+const handlePublishSubmit = async (e) =>{
+  e.preventDefault();
+  const nickname = auth.user;
+  try {
+    const res = await axios.post("/api/study/publish/"+param.path+"/"+nickname)
+    if(res.data === 'success'){
+      alert(res.data)
+    }else{
+      alert("권한이 없습니다.")
+    }
+  
+  } catch (error) {
+    console.log(error);
+  }
+}
+//스터디 비공개
+const handleCloseSubmit = async (e) =>{
+  e.preventDefault();
+  const nickname = auth.user;
+  try {
+    const res = await axios.post("/api/study/close/"+param.path+"/"+nickname)
+    if(res.data === 'success'){
+      alert(res.data)
+    }else{
+      alert("권한이 없습니다.")
+    }
+  
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 //tag
 const handleDelete = async (i) => {
@@ -124,7 +144,7 @@ const handleAddition =  async (tag) => {
   setTags([...tags, tag]);
   const nickname = auth.user;
   try {
-    const res = await axios.post("/api/study/tag/" + studyData.path, {title:tag.text})
+    const res = await axios.post("/api/study/tag/" + param.path, {title:tag.text})
     alert("save success");
 
   } catch (error) {
@@ -153,7 +173,8 @@ const handleZoneSubmit = async (e) =>{
     })
 
   try {
-    const res = await axios.post("/api/study/zone/"+studyData.path, zoneData)
+    const res = await axios.post("/api/study/zone/"+param.path, zoneData)
+    alert("success")
 
 } catch (error) {
   console.log(error)
@@ -164,10 +185,11 @@ options = zones;
 
   
   return (
+    <>
     <Tab.Group>
-    <div className="flex w-full max-w-9xl h-80 col-span-full sm:col-span-12 xl:col-span-12  items-center">
-      <div className=' w-40 max-w-sm px-2 mr-4'>
-      <Tab.List className="flex flex-col mt-4 gap-4 ">
+    <div className="flex w-full h-auto max-w-9xl col-span-full sm:col-span-12 xl:col-span-12  items-center">
+      <div className=' w-40 max-w-sm px-2 mr-4 items-center justify-center'>
+      <Tab.List className="flex flex-col mt-4 gap-4  items-center">
         <Tab>소개</Tab>
         <Tab>스터디 주제</Tab>
         <Tab>활동 지역</Tab>
@@ -175,8 +197,8 @@ options = zones;
       </Tab.List>
       </div>
 
-      <div className=' w-full max-w-xl  pr-10 mr-10'>
-      {studyData == null? "loading": (<>
+      <div className=' w-full max-w-xl pr-10 mr-10'>
+      
       <Tab.Panels>
         <Tab.Panel>
         <div>
@@ -302,14 +324,14 @@ options = zones;
               <div className=" rounded-md border border-gray-300 bg-white py-2 px-5 mt-4 text-sm font-medium
               leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2
               focus:ring-indigo-500 focus:ring-offset-2 w-20">
-              <button  type="button" onClick={handleSubmit}>스터디 공개</button>
+              <button  type="button" onClick={handlePublishSubmit}>스터디 공개</button>
              
             </div>
               </form>
             </div>
-            ): (       
+          ): (        
             <div>
-              <h1>스터디 종료</h1>
+              <h1>스터디 비공개</h1>
               <form>
               <div>
                 <p>스터디 활동을 마쳤다면 스터디를 종료하세요.
@@ -319,25 +341,70 @@ options = zones;
               <div className=" rounded-md border border-gray-300 bg-white py-2 px-5 mt-4 text-sm font-medium
               leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2
               focus:ring-indigo-500 focus:ring-offset-2 w-20">
-              <button  type="button" onClick={handleSubmit}>스터디 종료</button>
+              <button  type="button" onClick={handleCloseSubmit}>스터디 비공개</button>
              
             </div>
               </form>
             </div>
-            )}
+           )} 
            
 
 
-     
+           <div>
+              <h1>스터디 이름 변경</h1>
+              <form>
+              <div>
+                <p className=''> 스터디 이름을 수정합니다</p>
+                <div className="col-span-6 sm:col-span-3">
+                  <label htmlFor="first-name" className="block text-sm font-medium text-gray-700">
+                    스터디 이름
+                  </label>
+                  <input
+                    type="text"
+                    name="title"
+                    id="title"
+                    autoComplete="given-name" 
+                    onChange={handleChange}
+                    value={studyData.title}
+                    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+              <div className=" rounded-md border border-gray-300 bg-white py-2 px-2 mt-4 text-sm font-medium
+              leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2
+              focus:ring-indigo-500 focus:ring-offset-2 w-20">
+              <button  type="button" onClick={handleSubmit}>이름 변경</button>
+             
+            </div>
+              </form>
+            </div>
+
+
+           <div>
+              <h1>스터디 삭제</h1>
+              <form>
+              <div>
+                <p className=' bg-red-400'>  스터디를 삭제하면 스터디 관련 모든 기록을 삭제하며 복구할 수 없습니다.</p>
+              </div>
+              <div className=" rounded-md border border-red-300 bg-red-400 py-2 px-5 mt-4 text-sm font-medium
+              leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2
+              focus:ring-indigo-500 focus:ring-offset-2 w-20">
+              <button  type="button" onClick={handleSubmit} >스터디 삭제</button>
+             
+            </div>
+              </form>
+            </div>
+
 
           </div>
 
         </Tab.Panel>
       </Tab.Panels>
-      </>)}
+    
       </div>
     </div>
     </Tab.Group>
+    </>
   )
 }
 

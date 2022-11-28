@@ -15,7 +15,7 @@ import axios from '../api/axios';
 
 function Dashboard() {
   const {auth} = useContext(AuthContext);
-  const {setTopTag} = useContext(TagContext);
+  const {topTag,setTopTag} = useContext(TagContext);
   const navigate =  useNavigate();
   const [data, setData] = useState([
   ]);
@@ -26,20 +26,23 @@ function Dashboard() {
         const nickname = auth.user;
           const res = await axios.get("/api/settings/tag/"+nickname)
             const tagList = res.data;
-            if(res.data != ''){
+            if(res.data !== '' || res.data !== null){
               setTopTag(tagList);
             }
       } catch (error) {
         console.log(error);
       }
   }
-      fetchData();
+  if(topTag !== '' || topTag !== null){
+    fetchData();
+  }
+     
   }, []);
 
   useEffect(() => {
     const fetchData = async() =>{
       try {
-        const res = await axios.get("/api/study")
+        const res = await axios.get("/api/study/list")
         console.log(res.data);
         setData(()=>res.data)
       } catch (error) {
@@ -88,10 +91,10 @@ function Dashboard() {
        
             <div className="flex flex-wrap  sm:col-span-3 xl:col-span-3   gap-4   bg-white shadow-lg rounded-lg border border-slate-200">             
               {data.map((value,idx)=>(
-                // <Link to={`/study/${value.path}`} state={{path:value.path}} key={value.id} 
-                // className="" >
+                 <Link to={`/study/${value.path}`} state={{path:value.path}} key={value.id} 
+                className="" >
                 <DashboardCard01 key={idx} data={value}/>
-                //</Link>
+                </Link>
               ))}
               </div>
               <div>
