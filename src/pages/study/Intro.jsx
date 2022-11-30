@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom';
 import axios from '../../api/axios';
 
-const Intro = () => {
+const Intro = ({setEventBtn}) => {
   const param = useParams();
   const [desc, setDesc] = useState({});
 
@@ -17,6 +17,7 @@ const Intro = () => {
       }
   }
   fetchData();
+  setEventBtn(false);
   }, [])
 
   return (

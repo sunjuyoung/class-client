@@ -20,6 +20,7 @@ import Zone from './pages/settings/Zone';
 import  AuthContext  from "./context/AuthProvider";
 import Create from './pages/study/create';
 import View from './pages/study/View';
+import EventCreate from './pages/study/event/EventCreate';
 
 function App() {
   //const {auth} = useContext(AuthContext);
@@ -32,12 +33,12 @@ function App() {
     )
   }
 
-  // const ProtectedRoute = ({ children }) => {
-  //   if (auth.user == null){
-  //     return <Navigate to="/login" />;
-  //   }
-  //   return children;
-  // };
+  const ProtectedRoute = ({ children }) => {
+    if (auth.user == null || auth.user == ''){
+      return <Navigate to="/login" />;
+    }
+    return children;
+  };
 
 
   
@@ -86,7 +87,10 @@ function App() {
           path:"/study/:path",
           element: <View />
         },
-  
+        {
+          path:"/event-create/:path",
+          element: <EventCreate />
+        },
       ]
     },
     {

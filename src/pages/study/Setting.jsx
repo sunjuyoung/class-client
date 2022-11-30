@@ -21,7 +21,7 @@ const KeyCodes = {
 
 const delimiters = [KeyCodes.comma, KeyCodes.enter];
 
-const Setting = () => {
+const Setting = ({setEventBtn}) => {
   const {auth} = useContext(AuthContext);
   const [newStudy,setNewStudy ] = useState({});
   const [loading, setLoading] = useState(true);
@@ -47,6 +47,7 @@ const Setting = () => {
       }
   }
     fetchData();
+    setEventBtn(false);
   }, []);
 
   useEffect(() => {

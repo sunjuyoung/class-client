@@ -7,8 +7,8 @@ import { Link,useNavigate } from 'react-router-dom'
 
 const Create = () => {
   const {auth} = useContext(AuthContext);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [fullDescription, setFullDescription] = useState('');
+  console.log(auth)
+
   const [newStudy,setNewStudy ] = useState({
     path:"",
     fullDescription:"",
@@ -17,11 +17,6 @@ const Create = () => {
   });
   const navigate = useNavigate()
 
-  useEffect(() => {
-
-  }, [])
-
-  
   const handleSubmit = async (e) =>{
     e.preventDefault();
     const nickname = auth.user;

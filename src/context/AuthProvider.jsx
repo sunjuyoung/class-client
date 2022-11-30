@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem("user", auth.user);
         localStorage.setItem("role", auth.role);
         localStorage.setItem("ACCESS_TOKEN", auth.accessToken);
-      }, [auth.user]);
+      }, [auth.accessToken]);
 
     return(
         <AuthContext.Provider value={{ auth, setAuth}}>

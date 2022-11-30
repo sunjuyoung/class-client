@@ -8,7 +8,7 @@ import Intro from './Intro';
 import Members from './Members';
 import Setting from './Setting';
 import Event from './Event';
-import { useLocation, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const View = () => {
    
@@ -17,10 +17,43 @@ const View = () => {
   const [studyData, setStudyData] = useState();
   const [loading, setLoading] = useState(true);
   const [tagData, setTagData] = useState();
+  const [members, setMembers] = useState([]);
+  const [manager, setManager] = useState({});
  // const location = useLocation();
   const param = useParams();
+  const [eventBtn, setEventBtn] = useState(false);
+  const navigate = useNavigate();  
 
- 
+  useEffect(() => {
+    const fetchData = async () =>{
+      try {
+        const res = await axios.get("/api/study/members/"+param.path)
+        setMembers(()=>res.data.members);
+        setManager(()=>res.data.manager);
+          
+        console.log(res.data)
+      } catch (error) {
+        console.log(error)
+      }
+  }
+  fetchData();
+  setEventBtn(false);
+  }, [])
+
+  const handleJoinSubmit = async(e) =>{
+    e.preventDefault();
+    try {
+      const res = await axios.post("/api/study/join/"+param.path+"/"+auth.user)
+      setMembers(()=>res.data.members);
+      setManager(()=>res.data.manager);
+        
+      console.log(res.data)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  let join = members.filter((value,idx)=>value.nickname == auth.user);
 
 
   function classNames(...classes) {
@@ -43,8 +76,33 @@ const View = () => {
             <div className='w-full'>
               <form>
               <div className="flex flex-col mb-8 py-2  w-full">
-                <h1 className=' font-mono font-bold mb-4 text-2xl'>스터디 </h1>
-                
+
+                <div className='flex justify-between items-center'>
+                  <h1 className=' font-mono font-bold mb-4 text-2xl'>스터디 </h1>
+                  <div className='flex'>
+                    {manager.nickname == auth.user? (<></>): (
+                                <div className=" rounded-md border border-gray-300 bg-white py-2 px-1 mt-4 text-sm font-medium
+                                leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2
+                                focus:ring-indigo-500 focus:ring-offset-2 w-20">
+                                {join == ''? (<button  type="button" onClick={handleJoinSubmit} >스터디 참가</button>):(
+                                  <button  type="button" >스터디 탈퇴</button>
+                                )} 
+                                </div>
+                              
+                    )}
+
+                          {eventBtn && join? (   
+                              <div className=" rounded-md border border-gray-300 bg-white py-2 px-1 mt-4 text-sm font-medium
+                              leading-4 text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2
+                              focus:ring-indigo-500 focus:ring-offset-2 w-20">
+                                <button type='button' onClick={()=>navigate(`/event-create/${param.path}`)}>모임 만들기</button>
+                              </div>
+                          ):(<></>)} 
+                  
+           
+                  </div>          
+                </div>
+
                   <Tab.Group>
                     <Tab.List className="flex space-x-1 rounded-xl bg-blue-900 p-1 max-w-xl">
                     <Tab
@@ -95,19 +153,19 @@ const View = () => {
                         <Tab.Panels>
 
                             <Tab.Panel>
-                                <Intro />
+                                <Intro setEventBtn={setEventBtn}/>
                             </Tab.Panel>
 
                             <Tab.Panel>
-                                <Members />
+                                <Members setEventBtn={setEventBtn} members={members} manager={manager}/>
                             </Tab.Panel>
                              
                             <Tab.Panel>
-                             <Event />
+                             <Event setEventBtn={setEventBtn}/>
                             </Tab.Panel>
                                 
                             <Tab.Panel>
-                              <Setting />
+                              <Setting setEventBtn={setEventBtn}/>
                             </Tab.Panel>
                         </Tab.Panels>
                         </Tab.Group>

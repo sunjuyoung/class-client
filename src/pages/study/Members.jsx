@@ -2,24 +2,29 @@ import React, { useEffect, useState } from 'react'
 import { useLocation, useParams } from 'react-router-dom';
 import axios from '../../api/axios';
 
-const Members = () => {
+const Members = ({members,manager,setEventBtn}) => {
   const param = useParams();
-  const [members, setMembers] = useState([]);
-  const [manager, setManager] = useState({});
-  useEffect(() => {
-    const fetchData = async () =>{
-      try {
-        const res = await axios.get("/api/study/members/"+param.path)
-        setMembers(()=>res.data.members);
-        setManager(()=>res.data.manager);
+  // const [members, setMembers] = useState([]);
+  // const [manager, setManager] = useState({});
+  // useEffect(() => {
+  //   const fetchData = async () =>{
+  //     try {
+  //       const res = await axios.get("/api/study/members/"+param.path)
+  //       setMembers(()=>res.data.members);
+  //       setManager(()=>res.data.manager);
           
-        console.log(res.data)
-      } catch (error) {
-        console.log(error)
-      }
-  }
-  fetchData();
+  //       console.log(res.data)
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
+  // }
+  // fetchData();
+  // }, [])
+
+  useEffect(() => {
+    setEventBtn(false);
   }, [])
+  
 
   return (
     <div>
